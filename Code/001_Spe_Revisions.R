@@ -18,10 +18,9 @@ library(pheatmap)
 library(lisaClust)
 
 # Set working directory
-setwd("Walnut_IMC_Manuscript_Revisions_Outputs/")
 
 # Read in the spe object
-spe <- readRDS("../Pratik/study_combined_spe_cluster_subset_by_WalnutIMCCombined_ordered_all_14ClustersLabels.csv_file.rds")
+spe <- readRDS("DATA/Pratik/study_combined_spe_cluster_subset_by_WalnutIMCCombined_ordered_all_14ClustersLabels.csv_file.rds")
 
 # Transform the counts
 assay(spe, "exprs") <- asinh(counts(spe)/1)
@@ -86,15 +85,15 @@ New <- dittoHeatmap(celltype_mean,
 ggsave("New_Celltype_Mean_Heatmap.tiff", New, width = 8, height = 8, dpi = 300)
 
 # Save rds file
-saveRDS(spe, file = "April_2024_Edited_by_Mike_Walnut_Spe.Rds")
+saveRDS(spe, file = "DATA/Revised_Rds_Objects/April_2024_Edited_by_Mike_Walnut_Spe.Rds")
 
 
 # Now we can visualize some of these clusters on the tissues
 # Read in the images and masks
-img <- readRDS("../Pratik/study_combined_images_normalized_by___separateImages_=_FALSE___separateChannels_=_TRUE_2023_04_25_and_then_followed_by_normalize_0_and_0.2.rds")
-masks <- readRDS("../Pratik/study_combined_masks.rds")
-saveRDS(img, file = "April_2024_Edited_by_Mike_asinh_Images.Rds")
-saveRDS(masks, file = "April_2024_Edited_by_Mike_Walnut_Masks.Rds")
+img <- readRDS("DATA/Pratik/study_combined_images_normalized_by___separateImages_=_FALSE___separateChannels_=_TRUE_2023_04_25_and_then_followed_by_normalize_0_and_0.2.rds")
+masks <- readRDS("DATA/Pratik/study_combined_masks.rds")
+saveRDS(img, file = "DATA/Revised_Rds_Objects/April_2024_Edited_by_Mike_asinh_Images.Rds")
+saveRDS(masks, file = "DATA/Revised_Rds_Objects/April_2024_Edited_by_Mike_Walnut_Masks.Rds")
 
 # Ensure that channelNames of the images match with the rownames of the spatial experiment object
 channelNames(img) <- rownames(spe)
@@ -156,7 +155,7 @@ for (i in tissues){
 }
 
 # Read in the non-normalized images
-nonNorm_img <- readRDS("../Pratik/study_combined_images.rds")
+nonNorm_img <- readRDS("DATA/Pratik/study_combined_images.rds")
 
 # Set image names across images/masks and spe
 mcols(nonNorm_img) <- mcols(masks) <- DataFrame(sample_id = names(nonNorm_img),
@@ -198,7 +197,7 @@ mcols(nonNorm_img) <- mcols(masks) <- DataFrame(sample_id = names(nonNorm_img),
 
 # walnut_tumor_low_producer_01_01_2023_mcd1_roi1
 # Build spatial graphs
-spe <- readRDS("Revised_Rds_Objects/April_2024_Edited_by_Mike_Walnut_Spe.Rds")
+spe <- readRDS("DATA/Revised_Rds_Objects/April_2024_Edited_by_Mike_Walnut_Spe.Rds")
 spe <- buildSpatialGraph(spe, img_id = "sample_id", type = "knn", k = 20)
 # Make to 6
 
