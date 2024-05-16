@@ -12,13 +12,16 @@ library(RColorBrewer)
 # Differential Expression Barplot
 
 # Read in the differential marker data
-diff <- read.csv("Walnut_IMC_Manuscript_Revisions_Outputs/Data_Files/DifferentialMarkers.csv", header = TRUE, sep = ",")
+diff <- read.csv("DATA/Differential_Expression/DifferentialMarkers.csv", header = TRUE, sep = ",")
+
+# Factor the markers so they appear in the order they are in the file, not alphabetically
 diff$Marker <- factor(diff$Marker, levels = diff$Marker)
-enrichmentColor <- brewer.pal(3, "Set1")
+
+# Set a color scheme
 enrichColors <- c("Decreased in High" = "#E41A1C",
                   "Increased in High" = "#4DAF4A")
 
-
+# Plot
 diffExpression <- ggplot(diff, aes(x = Fold.Change, y = Marker, fill = Group, label = Pcode)) +
   geom_bar(stat = "identity", position = "identity") +
   geom_text(vjust = ifelse(diff$Group == "Decreased in High", 1.5, 0), size = 9) +
@@ -43,8 +46,8 @@ ggsave("FINALIZED_FIGURES/FIGURE_5/Figure_5b.tiff", diffExpression, width = 10, 
 # Vimentin Expression Violin Plots
 # Vimentin violin
 
-# Read in the asinh-transformed vimentin levels
-vimentin <- read.csv("Walnut_IMC_Manuscript_Revisions_Outputs/Data_Files/asinh_expression_levels_Per_ROI_Per_Marker.csv")
+# Read in the asinh-transformed vimentin levels for each cell in the dataset
+vimentin <- read.csv("DATA/IMC_Expression_Values/asinh_expression_levels_Per_ROI_Per_Marker.csv")
 
 # Factor the ROIs
 vimentin$ROIs <- factor(vimentin$ROI, levels = c(
@@ -52,6 +55,7 @@ vimentin$ROIs <- factor(vimentin$ROI, levels = c(
   "ROI 11", "ROI 12", "ROI 13", "ROI 14", "ROI 15", "ROI 16", "ROI 17", "ROI 18", "ROI 19", "ROI 20",
   "ROI 21", "ROI 22", "ROI 23"))
 
+# Assign the ROIs their urolithin group
 vimentin$Group <- ifelse(vimentin$ROIs == "ROI 1" | 
                            vimentin$ROIs == "ROI 2" |
                            vimentin$ROIs == "ROI 3" |
@@ -92,7 +96,7 @@ ggsave("FINALIZED_FIGURES/FIGURE_5/Figure_5c_ainh.tiff", vimExpr, width = 10, he
 #----------Figure 5d
 # Fecal Urolithin A Correlations with IMC markers
 # Read in the data
-data <- read.csv("/users/michaelmartinez/Desktop/Metabolomics/008_IMC_Correlations/DATA/Mean_Markers_Per_ROIs.csv")
+data <- read.csv("DATA/IMC_Expression_Values/Mean_Markers_Per_ROIs.csv")
 data[,2:6] <- NULL
 rownames(data) <- data$ROI
 data$ROI <- NULL
@@ -101,22 +105,28 @@ data$ROI <- NULL
 fecal <- data[,1:4]
 data[,1:4] <- NULL
 
+# Take the rows that correspond to vimentin and CD163
 vimentinCD163 <- data[,c(2,4)]
+
+# Add in the fecal data and uroGroup information
 vimentinCD163$FecalD <- fecal$Fecal_D
 vimentinCD163$UroGroup <- fecal$UroA_Class
+
+# Rename groups to be consistent with the rest of the paper and factor so urolithin low comes before urolithin high
 vimentinCD163$UroGroup <- ifelse(vimentinCD163$UroGroup == "Low", "Urolithin Low", "Urolithin High")
 vimentinCD163$UroGroup <- factor(vimentinCD163$UroGroup, levels = c("Urolithin Low", "Urolithin High"))
 vimentinCD163$ROI <- rownames(vimentinCD163)
-
 fecal$ROI <- rownames(fecal)
 
+# Pivot longer for plotting
 vim <- vimentinCD163 %>%
   pivot_longer(-c(ROI, UroGroup, FecalD), names_to = c("Marker"), values_to = "value") 
 fecal[,c(2,3)] <- NULL
 
+# Factor so vimentin comes before CD163 when plotting
 vim$Marker <- factor(vim$Marker, levels = c("Vimentin", "CD163"))
 
-# Combined and facetted
+# Plot a facetted plot
 corplot <- ggplot(vim, aes(x = log(FecalD), y = value, color = UroGroup, label = ROI)) +
   geom_point(size = 4) +
   stat_cor(inherit.aes = FALSE, aes(x = log(FecalD), y = value), method = "spearman", size = 8, vjust = -3) +

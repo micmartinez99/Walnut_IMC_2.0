@@ -21,7 +21,7 @@ library(scater)
 library(scales)
 library(BiocParallel)
 
-spe <- readRDS("Walnut_IMC_Manuscript_Revisions_Outputs/Revised_Rds_Objects/FULLY_REVISED_Walnut_Spe_Object_4.16.24.Rds")
+spe <- readRDS("DATA/Revised_Rds_Objects/FULLY_REVISED_Walnut_Spe_Object_4.16.24.Rds")
 
 # Calculate the mean counts for each ROI
 image_mean <- aggregateAcrossCells(spe[rowData(spe)$use_channel], 
@@ -36,6 +36,7 @@ assay(image_mean, "exprs") <- asinh(counts(image_mean))
 expr <- as.data.frame(t(assay(image_mean, "exprs")))
 write.csv(expr, file = "Walnut_IMC_Manuscript_Revisions_Outputs/Data_Files/asinh_expression_levels_Per_ROI_Per_Marker.csv")
 
+# Get the expression levels for each individual cell so we can plot violins
 cells <- as.data.frame(t(assay(spe, "exprs")))
 ROIS <- spe$roi_identifier_from_dr_moussa
 cells$ROIs <- ROIS

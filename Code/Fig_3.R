@@ -15,7 +15,7 @@ library(ggpubr)
 #----------Figure 3a
 # Serum Inflamatory Marker Heatmap
 # Read in the serum inflammatory data
-serum <- read.csv("/users/michaelmartinez/Desktop/Walnut_Project/SERUM_FIGURES/Serum_Inflammatory_Markers_Raw.csv", header = TRUE, sep = ",")
+serum <- read.csv("DATA/Serum/Violin_Data_Files/Serum_Markers.csv", header = TRUE, sep = ",")
 
 # Get a vector of sample IDs and Urolithin Group data
 Groups <- serum[,2:3]
@@ -44,11 +44,13 @@ serum_subset_low$Urolithin <- NULL
 low_means <- as.data.frame(colMeans(serum_subset_low))
 colnames(low_means) <- c("Low")
 
+# Medium
 serum_subset_med <- serum_subset[serum_subset$Urolithin == "2",]
 serum_subset_med$Urolithin <- NULL
 med_means <- as.data.frame(colMeans(serum_subset_med))
 colnames(med_means) <- c("Med")
 
+# High
 serum_subset_high <- serum_subset[serum_subset$Urolithin == "3",]
 serum_subset_high$Urolithin <- NULL
 high_means <- as.data.frame(colMeans(serum_subset_high))
@@ -81,7 +83,7 @@ anno <- HeatmapAnnotation(
   show_annotation_name = FALSE
 )
 
-
+# Apply Z-score transformation
 zscores <- t(apply(log1p_means, 1, scale))
 rownames(zscores) <- c("C-peptide", "sICAM-1", "sIL-6R",
                        "Ghrelin", "Haptoglobin", "TRAIL",
@@ -109,7 +111,7 @@ dev.off()
 #----------Figure 3c
 # Serum inflammatory correaltion plots
 # Read in the urolithin vaues
-uroVals <- read.csv("/users/michaelmartinez/Desktop/Walnut_Project/SERUM_FIGURES/UroA_Delta.csv", header = TRUE, sep = ",")
+uroVals <- read.csv("DATA/Metabolomics/Urine/UroA_Delta.csv", header = TRUE, sep = ",")
 uroVals <- uroVals[,c(1,3,4,7:8,11:ncol(uroVals))]
 
 # Keep these columns
@@ -164,7 +166,6 @@ serumCorr <- ggplot(uroValsLogLong, aes(x = Delta, y = values, color = Group)) +
         axis.title.y = element_text(size = 46, face = "bold"),
         axis.text.x = element_text(size = 32),
         axis.text.y = element_text(size = 32))
-
 ggsave("FINALIZED_FIGURES/FIGURE_3/Final_Figure_3C.tiff", serumCorr, width = 19, height = 14, dpi = 300)
 
 

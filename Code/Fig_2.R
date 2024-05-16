@@ -14,7 +14,7 @@ library(Hmisc)
 # Urolithin metabolites as paired boxplots
 
 # Read in the data
-uro_data <- read.csv("/users/michaelmartinez/Desktop/Walnut_Project/Code_RawData_for_Figure_Generation/Urolithin_Levels/Raw_Urolithin_Data/Urolithin_LongFormat.csv", header = TRUE, sep = ",")
+uro_data <- read.csv("DATA/Metabolomics/Urine/Urolithin_LongFormat.csv", header = TRUE, sep = ",")
 
 # Change timepoint to "Pre" and "Post" instead of "Before" and "After"
 uro_data$Timepoint <- ifelse(uro_data$Timepoint == "Before", "Pre", "Post")
@@ -56,7 +56,7 @@ ggsave("FINALIZED_FIGURES/FIGURE_2/Final_Figure_2b.tiff", urolithins_paired, wid
 #---------- Figure 2c
 # Correlation plot
 # Read in the table that has creatinine-normalized urolithin values
-vals <- read.csv("/users/michaelmartinez/Desktop/Walnut_Project/Code_RawData_for_Figure_Generation/Urolithin_Levels/Raw_Urolithin_Data/Urolithin 4.13.22_results_v1.xlsx - Urolithin 4.13.22_prep.csv")
+vals <- read.csv("DATA/Metabolomics/Urine/Uros_PrePost_Formatted.csv")
 
 # Take just the post columns
 after <- vals[,c(1,14:ncol(vals))]
@@ -83,13 +83,13 @@ PostUroCorr <- corrplot(cor_matrix, method = "color", is.corr = TRUE,
                         diag = TRUE, tl.col = "black", tl.srt = 45)
 dev.off()
 
-write.csv(cor_matrix, file = "Urolithin_post_Spearman_Correlations.csv")
-write.csv(p_values, file = "Urolithin_post_Spearman_Pvals.csv")
+write.csv(cor_matrix, file = "DATA/Metabolomics/Urine_Correlations/Urolithin_post_Spearman_Correlations.csv")
+write.csv(p_values, file = "DATA/Metabolomics/Urine_Correlations/Urolithin_post_Spearman_Pvals.csv")
 
 #---------- Figure 2e
 # Urolithin PCA, based on the full panel of pre and post, clustered by delta GMM classification
 # Read in the urolithin data
-uros <- read.csv("/users/michaelmartinez/Desktop/Walnut_Project/Code_RawData_for_Figure_Generation/Urolithin_Levels/Raw_Urolithin_Data/Urolithin 4.13.22_results_v1.xlsx - Urolithin 4.13.22_prep.csv")
+uros <- read.csv("DATA/Metabolomics/Urine/Uros_PrePost_Formatted.csv")
 
 # Take the full panel (pre and post) for all 9 metabolites
 uro <- uros[,5:22]

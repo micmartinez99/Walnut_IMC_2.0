@@ -21,10 +21,11 @@ library(scater)
 library(scales)
 library(BiocParallel)
 
-setwd("Walnut_IMC_Manuscript_Revisions_Outputs/")
-
 # Read in the modified spe object and normalized images
-spe <- readRDS("/users/michaelmartinez/Desktop/Walnut_IMC_2.0/Walnut_IMC_Manuscript_Revisions_Outputs/Revised_Rds_Objects/April_2024_Edited_by_Mike_Walnut_Spe.Rds")
+spe <- readRDS("DATA/Revised_Rds_Objects/April_2024_Edited_by_Mike_Walnut_Spe.Rds")
+
+#----------ADDITIONAL MODIFICATIONS----------#
+
 
 # Re-classify the clusters (4/11/24)
 cluster_celltype <- recode(spe$Phenotypes,
@@ -119,9 +120,8 @@ colorings$NumColors <- NumColors
 # Append the colorings list to the metadata slot of spe
 metadata(spe)$colors <- colorings
 
-#########################
-# UPDATE CLUSTERHEATMAP
-#########################
+
+#---------- Figure 6a
 
 # Calculate the mean expression of each Phenotype
 celltype_mean <- aggregateAcrossCells(as(spe, "SingleCellExperiment"),  
@@ -141,7 +141,7 @@ New <- dittoHeatmap(celltype_mean,
                     annotation_colors = list(Phenotype = metadata(spe)$colors$PhenotypeColors,
                                              Subgroup = metadata(spe)$colors$NumColors
                     ))
-ggsave("../FINALIZED_FIGURES/FIGURE_6/Figure_6a.tiff", New, width = 8, height = 8, dpi = 300)
+ggsave("FINALIZED_FIGURES/FIGURE_6/Figure_6a.tiff", New, width = 8, height = 8, dpi = 300)
 
 #########################
 # INDIVIDUAL ROI HEATMAP
@@ -175,9 +175,7 @@ ROIHeatmap <- dittoHeatmap(image_mean, genes = rownames(spe)[rowData(spe)$use_ch
                            gaps_col = c(10))
 ggsave("ROI_heatmap.tiff", ROIHeatmap, width = 8, height = 8, dpi = 300)
 
-#########################
-# ROI COMPOSITIONAL PLOT
-#########################
+#---------- Figure 6c
 
 # Barplot visualization
 barplot <- dittoBarPlot(spe,
@@ -197,9 +195,7 @@ barplot <- dittoBarPlot(spe,
         axis.text.x = element_text(size = 20))
 ggsave("../FINALIZED_FIGURES/FIGURE_6/Figure_6c.tiff", barplot, width = 10, height = 10, dpi = 300)
 
-#########################
-# ROI PRINCIPAL COMPONENT
-#########################
+#----------Figure 6b
 
 # Save SPE inCATALYST-compatible object with renamed colData entries and new metadata information
 spe_cat <- spe
@@ -634,64 +630,7 @@ ggsave("Walnut_Differential_Marker_Expression.tiff", diffExpression, width = 10,
 
 
 
-# axis.title.y = element_text(size = 22),
-# axis.text.y = element_text(size = 14),
-# axis.text.x = element_text(size = 14),
-# axis.title.x = element_text(size = 22)
 
-
-# Vimentin violin
-vimentin <- read.csv("/users/michaelmartinez/Desktop/Walnut_Project/Code_RawData_for_Figure_Generation/Vimentin_Violins/Raw_Files/violinDat_vim_widthnorm_allROIs.csv",
-                     header = TRUE, sep = ",")
-
-#Add faceting column
-vimentin <- vimentin %>%
-  mutate(Low_or_High = case_when(
-    ClusterID >= 1 & ClusterID <= 10 ~ "Urolithin Low",
-    ClusterID >= 11 & ClusterID <= 23 ~ "Urolithin High",
-    TRUE ~ "Other"
-  ))
-
-vimentin$ROI <- paste("ROI", vimentin$ClusterID, sep = " ")
-vimentin$ROI <- factor(vimentin$ROI, levels = c(
-  "ROI 1", "ROI 2", "ROI 3", "ROI 4", "ROI 5", "ROI 6", "ROI 7", "ROI 8", "ROI 9", "ROI 10",
-  "ROI 11", "ROI 12", "ROI 13", "ROI 14", "ROI 15", "ROI 16", "ROI 17", "ROI 18", "ROI 19", "ROI 20",
-  "ROI 21", "ROI 22", "ROI 23"))
-
-
-#Set factor order
-vimentin$Low_or_High <- factor(vimentin$Low_or_High,
-                               levels = c("Urolithin Low", "Urolithin High"))
-
-# vimColors <- c("Urolithin Low" = "#8DD3C7",
-#                "Urolithin High" = "#FB8072")
-
-vimColors <- c("Urolithin Low" = "#FF0000BF",
-               "Urolithin High" = "#FF8000BF")
-
-
-
-#Plot width scaled violin plot
-vimExpr <- ggplot(vimentin, aes(x = vimentin$ROI,
-                                y = as.numeric(vimentin$XprValue),
-                                fill = Low_or_High)
-) +
-  theme_classic() +
-  labs(x = "",
-       y = "Log vimentin expression") +
-  theme(axis.text.x = element_text(size = 30, angle = 90),
-        axis.text.y = element_text(size = 30),
-        axis.title.x = element_text(size = 32),
-        axis.title.y = element_text(size = 24),
-        strip.text = element_text(size = 32, face = "bold"),
-        legend.position = "none") +
-  geom_violin(#position = "dodge",
-    trim = FALSE, scale = "width" ,adjust = 1, na.rm = TRUE
-    ,draw_quantiles = TRUE  ) +
-  scale_fill_manual(values = vimColors) +
-  facet_wrap(~Low_or_High, scales = "free_x") +
-  geom_boxplot(outlier.shape = 19, outlier.size = 0.1, na.rm = TRUE, varwidth = TRUE, width=0.05)
-ggsave("Vimentin_Expression_Density_violins.tiff", vimExpr, width = 10, height = 10, dpi = 300)
 
 
 
