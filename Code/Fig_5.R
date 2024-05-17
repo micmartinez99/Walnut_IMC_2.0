@@ -79,7 +79,7 @@ vimColors <- c("Urolithin Low" = "#FF0000BF",
 vimExpr <- ggplot(vimentin, aes(x = ROIs, y = as.numeric(Vimentin), fill = Group)) +
   theme_classic() +
   labs(x = "",
-       y = "asinh vimentin expression") +
+       y = "Vimentin expression") +
   theme(axis.text.x = element_text(size = 30, angle = 90),
         axis.text.y = element_text(size = 32),
         axis.title.x = element_text(size = 32),
@@ -135,7 +135,7 @@ corplot <- ggplot(vim, aes(x = log(FecalD), y = value, color = UroGroup, label =
   facet_wrap(~Marker, scales = "free") +
   geom_text_repel(aes(label = ROI)) +
   scale_color_manual(values = c("Urolithin Low" = "#FF0000BF", "Urolithin High" = "#FF8000BF")) +
-  labs(y = "Mean asinh expression",
+  labs(y = "Mean expression",
        x = "Log10 Delta Fecal Urolithin A Levels (ng/ml)",
        color = "") +
   theme(strip.text = element_text(size = 32, face = "bold"),

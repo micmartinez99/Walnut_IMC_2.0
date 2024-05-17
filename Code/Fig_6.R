@@ -218,14 +218,14 @@ PCA <- clrDR(spe_cat,
   theme_classic() +
   theme(legend.position = "bottom",
         legend.box = "horizontal",
-        axis.title.y = element_text(size = 34, face = "bold"),
-        axis.title.x = element_text(size = 34, face = "bold"),
+        axis.title.y = element_text(size = 26, face = "bold"),
+        axis.title.x = element_text(size = 26, face = "bold"),
         legend.text = element_text(size = 12)) +
   labs(color = "Phenotype",
        size = "n cells",
        fill = "Group") +
   scale_size(range = c(2, 10))
-ggsave("../FINALIZED_FIGURES/FIGURE_6/Figure_6b.tiff", PCA, width = 10, height = 10, dpi = 300)
+ggsave("FINALIZED_FIGURES/FIGURE_6/Figure_6b.tiff", PCA, width = 10, height = 10, dpi = 300)
 
 #########################
 # SUPPLEMENTAL VIOLIN
