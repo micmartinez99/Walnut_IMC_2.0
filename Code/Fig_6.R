@@ -33,7 +33,7 @@ cluster_celltype <- recode(spe$Phenotypes,
                            "TA-like/middle epithelia" = "Proliferating epithelia",
                            "Antigen presenting cells" = "Antigen presenting cells",
                            "Slow middle epithelia" = "Non-proliferating epithelia", 
-                           "Various immune" = "Non-specific immune",
+                           "Various immune" = "Lymphocytes including T and B-cells",
                            "Slow middle epithelia" = "Non-proliferating epithelia",
                            "Surface epithelia" = "Non-proliferating epithelia",
                            "Musculuar cells" = "Muscle layer",
@@ -51,7 +51,7 @@ spe$Phenotypes <- cluster_celltype
 sum(spe$Phenotypes == "Non-proliferating epithelia") #151581
 sum(spe$Phenotypes == "Proliferating epithelia") #37895
 sum(spe$Phenotypes == "Antigen presenting cells") #70295
-sum(spe$Phenotypes == "Non-specific immune") #36145
+sum(spe$Phenotypes == "Lymphocytes including T and B-cells") #36145
 sum(spe$Phenotypes == "Muscle layer") #25934
 sum(spe$Phenotypes == "Stroma") #37755
 sum(spe$Phenotypes == "Myeloid lineage") #19586
@@ -61,7 +61,7 @@ cluster_cellNums <- recode(spe$Phenotypes,
                            "Non-proliferating epithelia" = "Non-proliferating epithelia (151581)",
                            "Proliferating epithelia" = "Proliferating epithelia (37895)",
                            "Antigen presenting cells" = "Antigen presenting cells (70295)",
-                           "Non-specific immune" = "Non-specific immune (36145)",
+                           "Lymphocytes including T and B-cells" = "Lymphocytes including T and B-cells (36145)",
                            "Muscle layer" = "Muscle layer (25934)",
                            "Stroma" = "Stroma (37755)",
                            "Myeloid lineage" = "Myeloid lineage (19586)")
@@ -70,7 +70,7 @@ spe$Phenotype <- cluster_cellNums
 # Factor the Phenotype
 spe$Phenotype <- factor(spe$Phenotype, levels = c("Non-proliferating epithelia (151581)",
                                                   "Proliferating epithelia (37895)",
-                                                  "Non-specific immune (36145)",
+                                                  "Lymphocytes including T and B-cells (36145)",
                                                   "Muscle layer (25934)",
                                                   "Stroma (37755)",
                                                   "Antigen presenting cells (70295)",
@@ -193,7 +193,7 @@ barplot <- dittoBarPlot(spe,
         axis.title.y = element_text(size = 34, face = "bold"),
         axis.text.y = element_text(size = 30),
         axis.text.x = element_text(size = 20))
-ggsave("../FINALIZED_FIGURES/FIGURE_6/Figure_6c.tiff", barplot, width = 10, height = 10, dpi = 300)
+ggsave("FINALIZED_FIGURES/FIGURE_6/Figure_6c.tiff", barplot, width = 10, height = 10, dpi = 300)
 
 #----------Figure 6b
 
@@ -225,7 +225,7 @@ PCA <- clrDR(spe_cat,
        size = "n cells",
        fill = "Group") +
   scale_size(range = c(2, 10))
-ggsave("FINALIZED_FIGURES/FIGURE_6/Figure_6b.tiff", PCA, width = 10, height = 10, dpi = 300)
+ggsave("FINALIZED_FIGURES/FIGURE_6/Figure_6b.tiff", PCA, width = 12, height = 12, dpi = 300)
 
 #########################
 # SUPPLEMENTAL VIOLIN
