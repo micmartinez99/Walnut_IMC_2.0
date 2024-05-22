@@ -126,7 +126,7 @@ PCA <- ggplot(pc_scores, aes(x = PC1, y = PC2, color = UroClassDelta)) +
         axis.title.x = element_text(size = 34, face = "bold"),
         axis.text.y = element_text(size = 32),
         axis.title.y = element_text(size = 34, face = "bold")) +
-  labs(color = "GMM-based Urolithin A group")
+  labs(color = "")
 ggsave("FINALIZED_FIGURES/FIGURE_2/Final_Figure_2e.tiff", PCA, width = 8, height = 8, dpi = 300)
 
 
